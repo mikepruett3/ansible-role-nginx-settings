@@ -22,7 +22,7 @@
 
 - name: "Set facts based on list of matching NGINX conf files"
   ansible.builtin.set_fact:
-    ssl_configs: ["{{ output.stdout_lines }}"]
+    ssl_configs: "{{ output.stdout_lines }}"
 
 - name: "Print returned information"
   ansible.builtin.debug:
