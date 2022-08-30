@@ -1,0 +1,20 @@
+---
+# tasks file for ansible-role-nginx-settings
+
+- name: "Include OS-specific variables"
+  include_vars: "{{ ansible_os_family }}.yaml"
+
+- name: "Get include statement for conf.d path from {{ nginx_config }}"
+  ansible.builtin.shell:
+    cmd: grep -i "*.conf" {{ nginx_config }}
+  register: output
+  changed_when: output.rc != 0
+
+- name: "Set facts based on conf.d output"
+  ansible.builtin.set_fact:
+    nginx_conf_path: "{{ output.stdout.split(' ')[1].rsplit('/', 1)[0] }}"
+
+- name: "Print returned information"
+  ansible.builtin.debug:
+    msg:
+      - "{{ nginx_conf_path }}"

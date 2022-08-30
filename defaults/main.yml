@@ -1,2 +1,7 @@
 ---
 # defaults file for ansible-role-nginx-settings
+
+## Certificate Files ##
+certificate_file: "mycert.crt"
+certificate_key: "mycert.key"
+certificate_chain: "mycert_chain.crt"

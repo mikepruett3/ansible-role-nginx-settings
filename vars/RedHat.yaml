@@ -1,0 +1,4 @@
+---
+# RedHat vars file for ansible-role-nginx-settings
+
+nginx_config: "/etc/nginx/nginx.conf"
