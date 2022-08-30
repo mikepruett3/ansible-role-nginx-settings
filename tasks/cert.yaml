@@ -12,7 +12,7 @@
 
 - name: "Set facts based on conf.d output"
   ansible.builtin.set_fact:
-    nginx_conf_path: "{{ output.stdout.split(' ')[1].rsplit('/', 1)[0] }}"
+    nginx_conf_path: "{{ output.stdout.split(' ')[1] }}" #.rsplit('/', 1)[0]
 
 - name: "Print returned information"
   ansible.builtin.debug:
