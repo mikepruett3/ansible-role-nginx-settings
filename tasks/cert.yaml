@@ -15,13 +15,13 @@
     nginx_conf_path: "/{{ output.stdout.rsplit('/', 1)[0].split('/', 1)[1] }}/"
 
 - name: "Get a list of NGINX conf files, with the SSL declaration"
-  ansible.builtin.find:
-    paths: "{{ nginx_conf_path }}"
-    file_type: file
-    use_regex: yes
-    patterns: ^[\s]*ssl_certificate.*\b.*$
+  ansible.builtin.shell:
+    cmd: grep -r -i "ssl_certificate" {{ nginx_conf_path }} | grep -v "ssl_certificate_key"
+  register: output
+  changed_when: output.rc != 0
 
 - name: "Print returned information"
   ansible.builtin.debug:
     msg:
-      - "{{ nginx_conf_path }}"
+      - "{{ output }}"
+#      - "{{ nginx_conf_path }}"
