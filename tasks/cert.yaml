@@ -16,8 +16,7 @@
 
 - name: "Get a list of NGINX conf files, with the SSL declaration"
   ansible.builtin.shell:
-    cmd: grep -lr -i "ssl_certificate" -v "ssl_certificate_key" {{ nginx_conf_path }}
-    #| grep -v "ssl_certificate_key"
+    cmd: grep -lr -i "ssl_certificate" {{ nginx_conf_path }} #| grep -v "ssl_certificate_key"
   register: output
   changed_when: output.rc != 0
 
