@@ -16,13 +16,16 @@
 
 - name: "Get a list of NGINX conf files, with the SSL declaration"
   ansible.builtin.shell:
-    #cmd: grep -lr -i "ssl_certificate" {{ nginx_conf_path }} #| grep -v "ssl_certificate_key"
-    cmd: grep -lr -i "listen" {{ nginx_conf_path }}
+    cmd: grep -lr -i "ssl_certificate" {{ nginx_conf_path }}
   register: output
   changed_when: output.rc != 0
+
+- name: "Set facts based on list of matching NGINX conf files"
+  ansible.builtin.set_fact:
+    ssl_configs: ["{{ output.stdout_lines }}"]
 
 - name: "Print returned information"
   ansible.builtin.debug:
     msg:
-      - "{{ output }}"
+      - "{{ ssl_configs }}"
 #      - "{{ nginx_conf_path }}"
