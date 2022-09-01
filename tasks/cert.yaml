@@ -48,14 +48,42 @@
     ssl_key_file: "{{ output.stdout.rsplit('/',1)[1].rstrip(';') }}"
     ssl_key_path: "{{ output.stdout.strip().split(' ')[1].rsplit('/',1)[0] }}"
 
-- name: "Print returned information"
-  ansible.builtin.debug:
-    msg:
-      - "{{ ssl_config }}"
-      - "{{ nginx_conf_path }}"
-      - "{{ ssl_certificate }}"
-      - "{{ ssl_certificate_file }}"
-      - "{{ ssl_certificate_path }}"
-      - "{{ ssl_key }}"
-      - "{{ ssl_key_file }}"
-      - "{{ ssl_key_path }}"
+#- name: "Print returned information"
+#  ansible.builtin.debug:
+#    msg:
+#      - "{{ ssl_config }}"
+#      - "{{ nginx_conf_path }}"
+#      - "{{ ssl_certificate }}"
+#      - "{{ ssl_certificate_file }}"
+#      - "{{ ssl_certificate_path }}"
+#      - "{{ ssl_key }}"
+#      - "{{ ssl_key_file }}"
+#      - "{{ ssl_key_path }}"
+
+- name: "Upload Certificates to {{ inventory_hostname }}"
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+    mode: '0640'
+  with_items:
+    - src: "{{ certificate_file }}"
+      dest: "{{ ssl_certificate_path }}/"
+    - src: "{{ certificate_key }}"
+      dest: "{{ ssl_key_path }}/"
+
+- name: "Update {{ ssl_config }} with new Certificate files"
+  ansible.builtin.lineinfile:
+    dest: "{{ ssl_config }}"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+    mode: '0644'
+    backup: yes
+  with_items:
+    - regexp: "^ssl_certificate"
+      line: "    ssl_certificate {{ ssl_certificate_path }}/{{ certificate_file.rsplit('/', 1)[1] }};"
+    - regexp: "^ssl_certificate_key"
+      line: "    ssl_certificate_key {{ ssl_key_path }}/{{ certificate_key.rsplit('/', 1)[1] }};"
+  #notify: "Restart NGINX HTTP Server Daemon"
