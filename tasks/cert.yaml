@@ -22,11 +22,11 @@
 
 - name: "Set facts based on list of matching NGINX conf files"
   ansible.builtin.set_fact:
-    ssl_configs: "{{ output.stdout_lines }}"
+    ssl_config: "{{ output.stdout }}"
 
-- name: "Get ssl_certificate path from {{ ssl_configs }}"
+- name: "Get ssl_certificate path from {{ ssl_config }}"
   ansible.builtin.shell:
-    cmd: grep -i "ssl_certificate /" {{ ssl_configs }}
+    cmd: grep -i "ssl_certificate /" {{ ssl_config }}
   register: output
   changed_when: output.rc != 0
 
@@ -39,7 +39,7 @@
 - name: "Print returned information"
   ansible.builtin.debug:
     msg:
-      - "{{ ssl_configs }}"
+      - "{{ ssl_config }}"
       - "{{ nginx_conf_path }}"
       - "{{ ssl_certificate }}"
       - "{{ ssl_certificate_file }}"
