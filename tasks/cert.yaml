@@ -33,7 +33,7 @@
 - name: "Set facts based on ssl_certificate output"
   ansible.builtin.set_fact:
     ssl_certificate: "{{ output.stdout }}"
-    ssl_certificate_file: "{{ output.stdout.rsplit('/')[1] }}"
+    ssl_certificate_file: "{{ output.stdout.rsplit('/') }}"
     #ssl_certificate_path: "/{{ output.stdout.rsplit('/')[1] }}"
 
 - name: "Print returned information"
