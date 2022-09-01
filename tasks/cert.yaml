@@ -39,8 +39,8 @@
 - name: "Print returned information"
   ansible.builtin.debug:
     msg:
-      - "{{ ssl_config }}"
-      - "{{ nginx_conf_path }}"
-      - "{{ ssl_certificate }}"
+      #- "{{ ssl_config }}"
+      #- "{{ nginx_conf_path }}"
+      #- "{{ ssl_certificate }}"
       - "{{ ssl_certificate_file }}"
       #- "{{ ssl_certificate_path }}"
