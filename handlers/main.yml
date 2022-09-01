@@ -1,2 +1,7 @@
 ---
 # handlers file for ansible-role-nginx-settings
+
+- name: "Restart NGINX HTTP Server Daemon"
+  ansible.builtin.service:
+    name: "{{ nginx_daemon }}"
+    state: restarted
