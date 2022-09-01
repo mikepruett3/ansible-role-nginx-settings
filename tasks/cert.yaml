@@ -34,7 +34,7 @@
   ansible.builtin.set_fact:
     ssl_certificate: "{{ output.stdout }}"
     ssl_certificate_file: "{{ output.stdout.rsplit('/',1)[1].rstrip(';') }}"
-    ssl_certificate_path: "{{ output.stdout.strip().rsplit(' ')[1] }}"
+    ssl_certificate_path: "{{ output.stdout.strip().split(' ')[1].split('/')[0] }}"
 
 - name: "Print returned information"
   ansible.builtin.debug:
