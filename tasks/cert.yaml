@@ -80,7 +80,7 @@
     line: "{{ item.line }}"
     state: present
     mode: '0644'
-    backup: yes
+    backup: no
   with_items:
     - regexp: "^ssl_certificate"
       line: "    ssl_certificate {{ ssl_certificate_path }}/{{ certificate_file.rsplit('/', 1)[1] }};"
