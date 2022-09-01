@@ -1,4 +1,5 @@
 ---
 # Debian vars file for ansible-role-nginx-settings
 
-nginx_config: "/etc/nginx/nginx.conf"
+nginx_dir: "/etc/nginx"
+nginx_config: "{{ nginx_dir }}/nginx.conf"
