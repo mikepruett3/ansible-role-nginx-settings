@@ -32,7 +32,7 @@
 
 - name: "Set facts based on ssl_certificate output"
   ansible.builtin.set_fact:
-    ssl_certificate: "{{ output.stdout.strip() }}"
+    ssl_certificate: "{{ output.stdout }}"
     ssl_certificate_file: "{{ output.stdout.rsplit('/',1)[1].rstrip(';') }}"
     ssl_certificate_path: "{{ output.stdout.strip().split(' ')[1].rsplit('/',1)[0] }}"
 
@@ -44,7 +44,7 @@
 
 - name: "Set facts based on ssl_certificate_key output"
   ansible.builtin.set_fact:
-    ssl_key: "{{ output.stdout.strip() }}"
+    ssl_key: "{{ output.stdout }}"
     ssl_key_file: "{{ output.stdout.rsplit('/',1)[1].rstrip(';') }}"
     ssl_key_path: "{{ output.stdout.strip().split(' ')[1].rsplit('/',1)[0] }}"
 
