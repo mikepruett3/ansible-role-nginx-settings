@@ -82,8 +82,8 @@
     mode: '0644'
     backup: no
   with_items:
-    - regexp: "^    ssl_certificate"
-      line: "    ssl_certificate {{ ssl_certificate_path }}/{{ certificate_file.rsplit('/', 1)[1] }};"
     - regexp: "^    ssl_certificate_key"
       line: "    ssl_certificate_key {{ ssl_key_path }}/{{ certificate_key.rsplit('/', 1)[1] }};"
+    - regexp: "^    ssl_certificate"
+      line: "    ssl_certificate {{ ssl_certificate_path }}/{{ certificate_file.rsplit('/', 1)[1] }};"
   #notify: "Restart NGINX HTTP Server Daemon"
