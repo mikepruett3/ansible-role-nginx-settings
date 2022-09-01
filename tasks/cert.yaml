@@ -26,7 +26,7 @@
 
 - name: "Get ssl_certificate path from {{ ssl_config }}"
   ansible.builtin.shell:
-    cmd: grep -i "ssl_certificate /" {{ ssl_config }}
+    cmd: grep -i "ssl_certificate /" {{ ssl_config }} | grep -v "#"
   register: output
   changed_when: output.rc != 0
 
