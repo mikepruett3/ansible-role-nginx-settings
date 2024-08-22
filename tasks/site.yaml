@@ -1,0 +1,63 @@
+---
+# Site tasks file for ansible-role-nginx-settings
+
+- name: "Test if site variables are set correctly"
+  ansible.builtin.assert:
+    that:
+      - site defined
+      - site string
+      - proxy_host defined
+      - proxy_host string
+      - proxy_port defined
+      - proxy_port string
+      - proxy_protocol defined
+      - proxy_protocol string
+      - server_name defined
+      - server_name string
+    quiet: yes
+
+- name: "Test if Certificate variables are set correctly"
+  ansible.builtin.assert:
+    that:
+      - certificate_file is defined
+      - certificate_file is string
+      - certificate_key is defined
+      - certificate_key is string
+      - certificate_chain is defined
+      - certificate_chain is string
+    quiet: yes
+
+- name: "Include OS-specific variables"
+  include_vars: "{{ ansible_os_family }}.yaml"
+
+- name: "Upload Certificates to {{ inventory_hostname }} for {{ site }}"
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+    mode: '0640'
+  with_items:
+    - src: "{{ certificate_file }}"
+      dest: "{{ certificate_dir }}/"
+    - src: "{{ certificate_key }}"
+      dest: "{{ private_dir }}/"
+
+- name: "Check if Virtual Hosts Config exists for {{ site }}"
+  ansible.builtin.stat:
+    path: "{{ virtual_hosts_config }}/{{ site }}.conf"
+  register: result
+
+- name: "Set facts about Virtual Hosts Config exists for {{ site }}"
+  ansible.builtin.set_fact:
+    site_config_exist: True
+  when:
+    - result.stat.exists
+    - result.failed is false
+
+- name: "Deploy Site Template for {{ site }}"
+  ansible.builtin.template:
+    src: site_ssl.j2
+    dest: "{{ virtual_hosts_config }}/{{ site }}.conf"
+  when:
+    - site_config_exist is false

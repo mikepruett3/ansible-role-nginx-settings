@@ -1,0 +1,32 @@
+server {
+    listen                  80;
+    listen                  [::]:80;
+    server_name             {{ server_name }};
+
+    access_log              off;
+    error_log               off;
+
+    return                  301 https://$server_name$request_uri;
+}
+
+server {
+    listen                  443 http2 ssl;
+    server_name             {{ server_name }};
+
+    access_log              off;
+    error_log               off;
+
+    if ($host = "www.$server_name" ) {
+         rewrite  ^/(.*)$  https://$server_name/$1  permanent;
+    }
+
+    ssl_certificate         {{ certificate_dir }}/{{ certificate_file.rsplit('/', 1)[1] }};
+    ssl_certificate_key     {{ private_dir }}/{{ certificate_key.rsplit('/', 1)[1] }};
+
+    location / {
+        proxy_set_header    Host $host;
+        proxy_set_header    X-Real-IP $remote_addr;
+        proxy_pass          {{ proxy_protocol }}://{{ proxy_host }}:{{ proxy_port }};
+    }
+}
+
