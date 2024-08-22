@@ -1,33 +1,10 @@
 ---
 # Lookup tasks file for ansible-role-nginx-settings
 
-- name: "Check for nginx group"
-  ansible.builtin.shell:
-    cmd: "getent group {{ nginx_group }}"
-  ignore_errors: true
-  register: result
-
-- name: "Set facts about nginx group"
-  ansible.builtin.set_fact:
-    nginx_group_exist: True
-  when:
-    - result.failed is false
-
-- name: "Check for nginx user"
-  ansible.builtin.shell:
-    cmd: "getent passwd {{ nginx_user }}"
-  ignore_errors: true
-  register: result
-
-- name: "Set facts about nginx user"
-  ansible.builtin.set_fact:
-    nginx_user_exist: True
-  when:
-    - result.failed is false
-
 - name: "Check for nginx home directory"
   ansible.builtin.stat:
     path: /etc/nginx
+  ignore_errors: true
   register: result
 
 - name: "Set facts about nginx home directory"
@@ -43,6 +20,34 @@
     install: true
   when:
     - nginx_home is not defined
+
+- name: "Check for nginx group"
+  ansible.builtin.shell:
+    cmd: "getent group {{ nginx_group }}"
+  register: result
+  when:
+    - nginx_home is defined
+
+- name: "Set facts about nginx group"
+  ansible.builtin.set_fact:
+    nginx_group_exist: True
+  when:
+    - nginx_home is defined
+    - result.failed is false
+
+- name: "Check for nginx user"
+  ansible.builtin.shell:
+    cmd: "getent passwd {{ nginx_user }}"
+  register: result
+  when:
+    - nginx_home is defined
+
+- name: "Set facts about nginx user"
+  ansible.builtin.set_fact:
+    nginx_user_exist: True
+  when:
+    - nginx_home is defined
+    - result.failed is false
 
 - name: "Check for nginx configuration file"
   ansible.builtin.stat:
@@ -63,27 +68,31 @@
   ansible.builtin.set_fact:
     virtual_hosts_configs: "{{ nginx_home }}/conf.d/"
   when:
-        - ansible_facts['os_family'] == "RedHat"
+    - nginx_home is defined
+    - ansible_facts['os_family'] == "RedHat"
 
 - name: "Collect Virtual Hosts Configs directory from nginx configuration file (Debian)"
   ansible.builtin.set_fact:
     virtual_hosts_configs: "{{ nginx_home }}/sites-available/"
   when:
-        - ansible_facts['os_family'] == "Debian"
+    - nginx_home is defined
+    - ansible_facts['os_family'] == "Debian"
 
 - name: "Set Facts for default certificate directories (RedHat)"
   ansible.builtin.set_fact:
     certificate_dir: "/etc/pki/tls/certs"
     private_dir: "/etc/pki/tls/private"
   when:
-        - ansible_facts['os_family'] == "RedHat"
+    - nginx_home is defined
+    - ansible_facts['os_family'] == "RedHat"
 
 - name: "Set Facts for default certificate directories (Debian)"
   ansible.builtin.set_fact:
     certificate_dir: "/etc/ssl/certs"
     private_dir: "/etc/ssl/private"
   when:
-        - ansible_facts['os_family'] == "Debian"
+    - nginx_home is defined
+    - ansible_facts['os_family'] == "Debian"
 
 #- name: "Get protocol from {{ grafana_config }}"
 #  ansible.builtin.shell:
