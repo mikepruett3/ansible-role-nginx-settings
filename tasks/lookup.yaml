@@ -57,6 +57,18 @@
     - result.stat.exists
     - result.failed is false
 
+- name: "Collect Virtual Hosts Configs directory from nginx configuration file (RedHat)"
+  ansible.builtin.set_fact:
+    nginx_config: "{{ nginx_home }}/conf.d/"
+  when:
+        - ansible_facts['os_family'] == "RedHat"
+
+- name: "Collect Virtual Hosts Configs directory from nginx configuration file (Debian)"
+  ansible.builtin.set_fact:
+    nginx_config: "{{ nginx_home }}/sites-available/"
+  when:
+        - ansible_facts['os_family'] == "Debian"
+
 #- name: "Get protocol from {{ grafana_config }}"
 #  ansible.builtin.shell:
 #    cmd: grep -E -i "^\s*protocol\s" {{ grafana_config }}
