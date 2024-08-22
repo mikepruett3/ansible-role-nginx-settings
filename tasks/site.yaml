@@ -42,7 +42,7 @@
 
 - name: "Check if Virtual Hosts Config exists for {{ site }}"
   ansible.builtin.stat:
-    path: "{{ virtual_hosts_config }}/{{ site }}.conf"
+    path: "{{ virtual_hosts_configs }}/{{ site }}.conf"
   register: result
 
 - name: "Set facts about Virtual Hosts Config exists for {{ site }}"
