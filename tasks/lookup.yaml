@@ -4,6 +4,7 @@
 - name: "Check for nginx group"
   ansible.builtin.shell:
     cmd: "getent group {{ nginx_group }}"
+  ignore_errors: true
   register: result
 
 - name: "Set facts about nginx group"
@@ -15,6 +16,7 @@
 - name: "Check for nginx user"
   ansible.builtin.shell:
     cmd: "getent passwd {{ nginx_user }}"
+  ignore_errors: true
   register: result
 
 - name: "Set facts about nginx user"
