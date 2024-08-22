@@ -57,4 +57,4 @@
     src: site_ssl.j2
     dest: "{{ virtual_hosts_config }}/{{ site }}.conf"
   when:
-    - site_config_exist is false
+    - site_config_exist is not defined
