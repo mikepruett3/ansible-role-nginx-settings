@@ -1,0 +1,120 @@
+---
+# Lookup tasks file for ansible-role-nginx-settings
+
+- name: "Check for nginx group"
+  ansible.builtin.shell:
+    cmd: "getent group {{ nginx_group }}"
+  register: result
+
+- name: "Set facts about nginx group"
+  ansible.builtin.set_fact:
+    nginx_group_exist: True
+  when:
+    - result.failed is false
+
+- name: "Check for nginx user"
+  ansible.builtin.shell:
+    cmd: "getent passwd {{ nginx_user }}"
+  register: result
+
+- name: "Set facts about nginx user"
+  ansible.builtin.set_fact:
+    nginx_user_exist: True
+  when:
+    - result.failed is false
+
+- name: "Check for nginx home directory"
+  ansible.builtin.stat:
+    path: /etc/nginx
+  register: result
+
+- name: "Set facts about nginx home directory"
+  ansible.builtin.set_fact:
+    nginx_home: /etc/nginx
+  when:
+    - result.stat.exists
+    - result.stat.isdir
+    - result.failed is false
+
+- name: "Set Facts for Install variable"
+  ansible.builtin.set_fact:
+    install: true
+  when:
+    - nginx_home is not defined
+
+- name: "Check for nginx configuration file"
+  ansible.builtin.stat:
+    path: "{{ nginx_home }}/nginx.conf"
+  register: result
+  when:
+    - grafana_home is defined
+
+- name: "Set Facts for nginx configuration file"
+  ansible.builtin.set_fact:
+    nginx_config: "{{ nginx_home }}/nginx.conf"
+  when:
+    - grafana_home is defined
+    - result.stat.exists
+    - result.failed is false
+
+#- name: "Get protocol from {{ grafana_config }}"
+#  ansible.builtin.shell:
+#    cmd: grep -E -i "^\s*protocol\s" {{ grafana_config }}
+#  register: result
+
+#- name: "Set protocol facts based on Grafana configuration"
+#  ansible.builtin.set_fact:
+#    protocol: "{{ result.stdout.strip().split(' = ')[1].rsplit('/',1)[0] }}"
+#  when:
+#      - result.failed is false
+
+#- name: "Get http_port from {{ grafana_config }}"
+#  ansible.builtin.shell:
+#    cmd: grep -E -i "^\s*http_port\s" {{ grafana_config }}
+#  register: result
+
+#- name: "Set http_port facts based on Grafana configuration"
+#  ansible.builtin.set_fact:
+#    http_port: "{{ result.stdout.strip().split(' = ')[1].rsplit('/',1)[0] }}"
+#  when:
+#      - result.failed is false
+
+#- name: "Get http_domain from {{ grafana_config }}"
+#  ansible.builtin.shell:
+#    cmd: grep -E -i "^\s*domain\s" {{ grafana_config }}
+#  register: result
+
+#- name: "Set http_domain facts based on Grafana configuration"
+#  ansible.builtin.set_fact:
+#    http_domain: "{{ result.stdout.strip().split(' = ')[1].rsplit('/',1)[0] }}"
+#  when:
+#      - result.failed is false
+
+#- name: "Collect current Certificate Serial Number"
+#  ansible.builtin.shell:
+#    cmd: "echo | openssl s_client -showcerts -servername localhost -connect localhost:{{ http_port }} 2>/dev/null | openssl x509 -inform pem -noout -text | head -n 5 | tail -n 1 | awk '{ print $1 }'"
+#  register: result
+
+#- name: "Set Facts about current Certificate Serial Number"
+#  ansible.builtin.set_fact:
+#    current_cert_sn: "{{ result.stdout }}"
+#  when:
+#      - result.failed is false
+
+#- name: "Collect new Certificate Serial Number"
+#  ansible.builtin.shell:
+#    cmd: "openssl x509 -in {{ certificate_file }} -noout -text | head -n 5 | tail -n 1 | awk '{ print $1 }'"
+#  delegate_to: localhost
+#  register: result
+
+#- name: "Set Facts about current Certificate Serial Number"
+#  ansible.builtin.set_fact:
+#    new_cert_sn: "{{ result.stdout }}"
+#  when:
+#      - result.failed is false
+
+#- name: "Set Facts for Cert variable"
+#  ansible.builtin.set_fact:
+#    cert: true
+#  when:
+#    - current_cert_sn != new_cert_sn

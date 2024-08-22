@@ -1,0 +1,22 @@
+---
+# Assert tasks file for ansible-role-nginx-settings
+
+- name: "Test if Certificate Information is set correctly"
+  ansible.builtin.assert:
+    that:
+      - certificate_file is defined
+      - certificate_file is string
+      - certificate_key is defined
+      - certificate_key is string
+      - certificate_chain is defined
+      - certificate_chain is string
+    quiet: yes
+
+#- name: "Test if Grafana User and Group is set correctly"
+#  ansible.builtin.assert:
+#    that:
+#      - grafana_user is defined
+#      - grafana_user is string
+#      - grafana_group is defined
+#      - grafana_group is string
+#    quiet: yes

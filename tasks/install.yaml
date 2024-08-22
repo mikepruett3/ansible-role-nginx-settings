@@ -1,0 +1,33 @@
+---
+# Install tasks file for ansible-role-nginx-settings
+
+- name: "Test if install boolean variable is set correctly"
+  ansible.builtin.assert:
+    that:
+      - install is defined
+      - install is boolean
+    quiet: yes
+
+- name: "Install packages (yum)"
+  ansible.builtin.yum:
+    name: nginx
+    state: present
+  when:
+    - ansible_facts['pkg_mgr'] == 'yum'
+
+- name: "Install packages (dnf)"
+  ansible.builtin.dnf:
+    name: nginx
+    state: present
+    disable_gpg_check: yes
+  when:
+    - ansible_facts['pkg_mgr'] == 'dnf'
+
+- name: "Install packages (apt)"
+  ansible.builtin.apt:
+    deb: nginx
+    state: present
+  with_items:
+    - "{{ packages }}"
+  when:
+    - ansible_facts['pkg_mgr'] == 'apt'

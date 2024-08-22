@@ -1,5 +1,12 @@
 ---
-# tasks file for ansible-role-nginx-settings
+# Cert tasks file for ansible-role-nginx-settings
+
+#- name: "Test if cert boolean variable is set correctly"
+#  ansible.builtin.assert:
+#    that:
+#      - cert is defined
+#      - cert is boolean
+#    quiet: yes
 
 - name: "Include OS-specific variables"
   include_vars: "{{ ansible_os_family }}.yaml"
