@@ -47,13 +47,13 @@
     path: "{{ nginx_home }}/nginx.conf"
   register: result
   when:
-    - grafana_home is defined
+    - nginx_home is defined
 
 - name: "Set Facts for nginx configuration file"
   ansible.builtin.set_fact:
     nginx_config: "{{ nginx_home }}/nginx.conf"
   when:
-    - grafana_home is defined
+    - nginx_home is defined
     - result.stat.exists
     - result.failed is false
 
