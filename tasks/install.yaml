@@ -25,9 +25,7 @@
 
 - name: "Install packages (apt)"
   ansible.builtin.apt:
-    deb: nginx
+    name: nginx
     state: present
-  with_items:
-    - "{{ packages }}"
   when:
     - ansible_facts['pkg_mgr'] == 'apt'
