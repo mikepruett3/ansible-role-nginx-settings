@@ -55,6 +55,6 @@
 - name: "Deploy Site Template for {{ site }}"
   ansible.builtin.template:
     src: site_ssl.j2
-    dest: "{{ virtual_hosts_config }}/{{ site }}.conf"
+    dest: "{{ virtual_hosts_configs }}/{{ site }}.conf"
   when:
     - site_config_exist is not defined
