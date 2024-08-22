@@ -4,16 +4,16 @@
 - name: "Test if site variables are set correctly"
   ansible.builtin.assert:
     that:
-      - site defined
-      - site string
-      - proxy_host defined
-      - proxy_host string
-      - proxy_port defined
-      - proxy_port string
-      - proxy_protocol defined
-      - proxy_protocol string
-      - server_name defined
-      - server_name string
+      - site is defined
+      - site is string
+      - proxy_host is defined
+      - proxy_host is string
+      - proxy_port is defined
+      - proxy_port is string
+      - proxy_protocol is defined
+      - proxy_protocol is string
+      - server_name is defined
+      - server_name is string
     quiet: yes
 
 - name: "Test if Certificate variables are set correctly"
