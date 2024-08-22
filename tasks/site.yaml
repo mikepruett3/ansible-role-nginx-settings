@@ -27,9 +27,6 @@
       - certificate_chain is string
     quiet: yes
 
-- name: "Include OS-specific variables"
-  include_vars: "{{ ansible_os_family }}.yaml"
-
 - name: "Upload Certificates to {{ inventory_hostname }} for {{ site }}"
   ansible.builtin.copy:
     src: "{{ item.src }}"
