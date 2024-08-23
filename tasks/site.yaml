@@ -60,3 +60,4 @@
     dest: "{{ virtual_hosts_configs }}/{{ site_name }}.conf"
   when:
     - site_config_exist is not defined
+  notify: "Restart NGINX HTTP Server Daemon"
