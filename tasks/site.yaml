@@ -4,8 +4,10 @@
 - name: "Test if site variables are set correctly"
   ansible.builtin.assert:
     that:
-      - site is defined
-      - site is string
+      #- site is defined
+      #- site is bool
+      - site_name is defined
+      - site_name is string
       - proxy_host is defined
       - proxy_host is string
       - proxy_port is defined
@@ -27,7 +29,7 @@
       - certificate_chain is string
     quiet: yes
 
-- name: "Upload Certificates to {{ inventory_hostname }} for {{ site }}"
+- name: "Upload Certificates to {{ inventory_hostname }} for {{ site_name }}"
   ansible.builtin.copy:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
@@ -40,21 +42,21 @@
     - src: "{{ certificate_key }}"
       dest: "{{ private_dir }}/"
 
-- name: "Check if Virtual Hosts Config exists for {{ site }}"
+- name: "Check if Virtual Hosts Config exists for {{ site_name }}"
   ansible.builtin.stat:
-    path: "{{ virtual_hosts_configs }}/{{ site }}.conf"
+    path: "{{ virtual_hosts_configs }}/{{ site_name }}.conf"
   register: result
 
-- name: "Set facts about Virtual Hosts Config exists for {{ site }}"
+- name: "Set facts about Virtual Hosts Config exists for {{ site_name }}"
   ansible.builtin.set_fact:
     site_config_exist: True
   when:
     - result.stat.exists
     - result.failed is false
 
-- name: "Deploy Site Template for {{ site }}"
+- name: "Deploy Site Template for {{ site_name }}"
   ansible.builtin.template:
     src: site_ssl.j2
-    dest: "{{ virtual_hosts_configs }}/{{ site }}.conf"
+    dest: "{{ virtual_hosts_configs }}/{{ site_name }}.conf"
   when:
     - site_config_exist is not defined
