@@ -13,8 +13,8 @@ server {
     listen                  443 http2 ssl;
     server_name             {{ server_name }};
 
-    access_log              logs/access_{{ server_name }}.log;
-    error_log               logs/error_{{ server_name }}.log;
+    access_log              /var/log/nginx/access_{{ server_name }}.log;
+    error_log               /var/log/nginx/error_{{ server_name }}.log;
 
     if ($host = "www.$server_name" ) {
          rewrite  ^/(.*)$  https://$server_name/$1  permanent;
