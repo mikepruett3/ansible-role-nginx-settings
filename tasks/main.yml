@@ -27,3 +27,9 @@
   when:
     - cert is defined
     - cert | bool
+
+- name: "Include tasks from site playbook"
+  ansible.builtin.include_tasks: site.yaml
+  when:
+    - site is defined
+    - site | bool
