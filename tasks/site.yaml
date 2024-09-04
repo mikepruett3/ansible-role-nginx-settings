@@ -60,7 +60,6 @@
     dest: "{{ virtual_hosts_configs }}/{{ site_name }}.conf"
   when:
     - grafana is undefined
-    - not grafana
     - site_config_exist is not defined
   notify: "Restart NGINX HTTP Server Daemon"
 
