@@ -59,5 +59,17 @@
     src: site_ssl.j2
     dest: "{{ virtual_hosts_configs }}/{{ site_name }}.conf"
   when:
+    - grafana is undefined
+    - not grafana
+    - site_config_exist is not defined
+  notify: "Restart NGINX HTTP Server Daemon"
+
+- name: "Deploy Site Template for {{ site_name }} (Grafana)"
+  ansible.builtin.template:
+    src: site_ssl_grafana.j2
+    dest: "{{ virtual_hosts_configs }}/{{ site_name }}.conf"
+  when:
+    - grafana is defined
+    - grafana | bool
     - site_config_exist is not defined
   notify: "Restart NGINX HTTP Server Daemon"
